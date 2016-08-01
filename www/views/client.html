@@ -1,0 +1,58 @@
+<div class="page-header">
+    <h1>{{ RestClient['app/name'] }} <small>{{ RestClient['app/host'] }}</small></h1>
+</div>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(key, value) in RestClient" ng-click="">
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="progress" ng-show="MqttClient.Status === 'connecting'">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        <span class="sr-only">Connecting</span>
+    </div>
+</div>
+
+
+<h4>Subscriptions</h4>
+
+<button ng-click="Subscribe()" ng-show="MqttClient.Status === 'connected'" class="btn btn-primary">Subscribe</button>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Topic</th>
+            <th>Payload</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(topic, payload) in MqttSubscriptions">
+            <td>{{ topic }}</td>
+            <td>{{ payload }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>Actions</h4>
+
+<form class="form-inline" ng-repeat="Channel in MqttInChannels">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">{{ Channel.topic }}</div>
+            <input type="text" ng-model="Channel.payload" class="form-control" id="" placeholder="Payload">
+            <div class="input-group-addon">
+                <a href="" ng-click="PublishToChannel(Channel);">Publish</a>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,26 @@
+<div class="page-header">
+    <h1>Current Clients<small></small></h1>
+</div>
+
+<table class="table table-condensed table-hover" ng-show="RestClients.length > 0">
+    <thead>
+        <tr>
+            <th>_id</th>
+            <th>Name</th>
+            <th>Host</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="RestClient in RestClients" ng-click="">
+            <td>{{ RestClient._id }}</td>
+            <td>{{ RestClient['app/name'] }}</td>
+            <td><a href="#/client/{{ RestClient._id }}">{{ RestClient['app/host'] }}</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <a ng-click="Update()" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Update Clients
+    </a>
+</div>
