@@ -10,9 +10,26 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="(key, value) in RestClient" ng-click="">
+        <tr ng-repeat="key in ['app/host', 'app/port', 'app/name', 'app/type']" ng-click="">
             <td>{{ key }}</td>
-            <td>{{ value }}</td>
+            <td>{{ RestClient[key] }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>Channel</th>
+            <th>Direction</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="channel in RestClient['app/channels']" ng-click="">
+            <td>{{ channel.topic }}</td>
+            <td>{{ channel.direction }}</td>
+            <td>{{ channel.description }}</td>
         </tr>
     </tbody>
 </table>
@@ -23,10 +40,27 @@
     </div>
 </div>
 
+<form class="form-inline">
+  <div class="form-group">
+    <select ng-model="ConnectionType" class="form-control" placeholder="Connection Type">
+      <option value="Local">Use Local Connection</option>
+      <option value="Remote">Use Remote Connection</option>
+    </select>
+  </div>
+</form>
+
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <a ng-click="Connect()" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect
+    </a>
+    <a ng-click="Update()" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Update
+    </a>
+</div>
+
+<br>
 
 <h4>Subscriptions</h4>
-
-<button ng-click="Subscribe()" ng-show="MqttClient.Status === 'connected'" class="btn btn-primary">Subscribe</button>
 
 <table class="table table-condensed">
     <thead>
@@ -56,3 +90,8 @@
         </div>
     </div>
 </form>
+
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <a ng-click="Subscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-primary">Subscribe</a>
+    <a ng-click="Unsubscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-primary">Unsubscribe</a>
+</div>

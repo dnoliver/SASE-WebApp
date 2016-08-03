@@ -1,6 +1,7 @@
 /* global angular */
 
 angular.module('SASEWebApp')
-    .controller('SettingsCtrl', ['Settings', '$scope', function (Settings, $scope) {
+    .controller('SettingsCtrl', ['Settings', 'Persistance', '$scope', function (Settings, Persistance, $scope) {
         $scope.Settings = Settings;
+        $scope.Persistance = Persistance;
     }]);

@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Local Connection <small>WIFI</small></h1>
+    <h1>Local <small>WIFI</small></h1>
 </div>
 
 <form class="form-inline">
@@ -20,7 +20,11 @@
         </div>
     </div>
 
-    <button ng-click="Connect()" ng-show="MqttClient.Status !== 'connected'" type="button" class="btn btn-primary">Connect</button>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <a ng-click="Connect()" ng-show="MqttClient.Status !== 'connected'" role="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect
+        </a>
+    </div>
 </form>
 
 <form class="form-inline" ng-show="MqttClient.Status === 'connected'">
@@ -44,7 +48,11 @@
         </div>
     </div>
 
-    <button ng-click="Subscribe()" class="btn btn-primary">Subscribe</button>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <a ng-click="Subscribe()" role="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Subscribe
+        </a>
+    </div>
 </form>
 
 <form class="form-inline" ng-show="MqttClient.Status === 'connected'">
@@ -75,7 +83,11 @@
         </div>
     </div>
 
-    <button ng-click="Publish()" class="btn btn-primary">Publish</button>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <a ng-click="Publish()" role="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Publish
+        </a>
+    </div>
 </form>
 
 <table class="table table-condensed">
