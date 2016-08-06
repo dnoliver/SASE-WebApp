@@ -14,7 +14,7 @@
         <tr ng-repeat="RestClient in RestClients" ng-click="">
             <td>{{ RestClient._id }}</td>
             <td>{{ RestClient['app/name'] }}</td>
-            <td><a href="#/client/{{ RestClient._id }}">{{ RestClient['app/host'] }}</a></td>
+            <td><a href="" ng-click="onClientSelected(RestClient);">{{ RestClient['app/host'] }}</a></td>
         </tr>
     </tbody>
 </table>

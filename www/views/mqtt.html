@@ -1,0 +1,115 @@
+<div class="page-header">
+    <h1>{{ Title }} <small>{{ Subtitle }}</small></h1>
+</div>
+
+<h4>Connect</h4>
+
+<div class="progress" ng-show="MqttClient.Status === 'connecting'">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        <span class="sr-only">Connecting</span>
+    </div>
+</div>
+
+<form class="form">
+    <div class="form-group">
+        <label>Broker Host</label>
+        <input type="text" class="form-control" id="" placeholder="Broker Host" ng-model="Settings.Host">
+    </div>
+
+    <div class="form-group">
+        <label>Broker Port</label>
+        <input type="number" class="form-control" id="" placeholder="Broker Port" ng-model="Settings.Port">
+    </div>
+
+    <div class="form-group">
+        <label>Broker Username</label>
+        <input type="text" class="form-control" id="" placeholder="Broker Username" ng-model="Settings.Username">
+    </div>
+
+    <div class="form-group">
+        <label>Broker Password</label>
+        <input type="password" class="form-control" id="" placeholder="Broker Password" ng-model="Settings.Password">
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input ng-model="Settings.Ssl" type="checkbox"> Use SSL
+        </label>
+    </div>
+</form>
+
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <a ng-click="MqttClient.connect()" ng-show="MqttClient.Status !== 'connected'" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect
+    </a>
+    <a ng-click="MqttClient.disconnect()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-danger">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Disconnect
+    </a>
+</div>
+
+<form class="form-inline" ng-show="MqttClient.Status === 'connected'">
+    <h4>Subscribe</h4>
+
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">Topic</div>
+            <input ng-model="MqttSubscription.topic" type="text" class="form-control" id="" placeholder="Topic">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">QoS</div>
+            <select ng-model="MqttSubscription.qos" class="form-control">
+                <option value="0">At most once</option>
+                <option value="1">At least once</option>
+                <option value="2">Exactly once</option>
+            </select>
+        </div>
+    </div>
+
+    <a ng-click="MqttClient.subscribe(MqttSubscription.topic, MqttSubscription.qos)" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Subscribe
+    </a>
+</form>
+
+<form class="form-inline" ng-show="MqttClient.Status === 'connected'">
+    <h4>Publish</h4>
+
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">Topic</div>
+            <input ng-model="MqttPublication.topic" type="text" class="form-control" id="" placeholder="Topic">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">Payload</div>
+            <input ng-model="MqttPublication.payload" type="text" class="form-control" id="" placeholder="Payload">
+        </div>
+    </div>
+
+    <a ng-click="MqttClient.publish(MqttPublication.topic, MqttPublication.payload, {qos: MqttPublication.qos})" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Publish
+    </a>
+</form>
+
+<h4>Subscriptions</h4>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Topic</th>
+            <th>Payload</th>
+            <th>Unsubscribe</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(topic, payload) in MqttClient.subscriptions">
+            <td>{{ topic }}</td>
+            <td>{{ payload }}</td>
+            <td><a href="" ng-click="MqttClient.unsubscribe(topic)">unsubscribe</a></td>
+        </tr>
+    </tbody>
+</table>

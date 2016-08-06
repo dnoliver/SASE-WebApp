@@ -17,6 +17,36 @@
     </tbody>
 </table>
 
+<div class="progress" ng-show="MqttClient.Status === 'connecting'">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        <span class="sr-only">Connecting</span>
+    </div>
+</div>
+
+<form class="form">
+  <div class="form-group">
+    <select ng-model="ConnectionType" class="form-control" placeholder="Connection Type">
+      <option value="Local">Use Local Connection</option>
+      <option value="Remote">Use Remote Connection</option>
+    </select>
+  </div>
+</form>
+
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <a ng-click="Update()" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Update
+    </a>
+    <a ng-click="MqttClient.connect()" ng-show="MqttClient.Status !== 'connected'" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect
+    </a>
+    <a ng-click="MqttClient.disconnect()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-danger">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Disconnect
+    </a>
+</div>
+
+<br>
+<h4>Channels</h4>
+
 <table class="table table-condensed table-hover">
     <thead>
         <tr>
@@ -34,50 +64,36 @@
     </tbody>
 </table>
 
-<div class="progress" ng-show="MqttClient.Status === 'connecting'">
-    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-        <span class="sr-only">Connecting</span>
-    </div>
-</div>
-
-<form class="form-inline">
-  <div class="form-group">
-    <select ng-model="ConnectionType" class="form-control" placeholder="Connection Type">
-      <option value="Local">Use Local Connection</option>
-      <option value="Remote">Use Remote Connection</option>
-    </select>
-  </div>
-</form>
-
 <div class="btn-group btn-group-justified" role="group" aria-label="...">
-    <a ng-click="Connect()" role="button" class="btn btn-primary">
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect
+    <a ng-click="Unsubscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-danger">
+        <span class="glyphicon glyphicon-remove-sign"></span> Unsubscribe
     </a>
-    <a ng-click="Update()" role="button" class="btn btn-primary">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Update
+    <a ng-click="Subscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-ok-sign"></span> Subscribe
     </a>
 </div>
 
 <br>
-
-<h4>Subscriptions</h4>
+<h4>In Channels</h4>
 
 <table class="table table-condensed">
     <thead>
         <tr>
             <th>Topic</th>
             <th>Payload</th>
+            <th>Unsubscribe</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="(topic, payload) in MqttSubscriptions">
+        <tr ng-repeat="(topic, payload) in MqttClient.subscriptions">
             <td>{{ topic }}</td>
             <td>{{ payload }}</td>
+            <td><a href="" ng-click="MqttClient.unsubscribe(topic)">unsubscribe</a></td>
         </tr>
     </tbody>
 </table>
 
-<h4>Actions</h4>
+<h4>Out Channels</h4>
 
 <form class="form-inline" ng-repeat="Channel in MqttInChannels">
     <div class="form-group">
@@ -85,13 +101,8 @@
             <div class="input-group-addon">{{ Channel.topic }}</div>
             <input type="text" ng-model="Channel.payload" class="form-control" id="" placeholder="Payload">
             <div class="input-group-addon">
-                <a href="" ng-click="PublishToChannel(Channel);">Publish</a>
+                <a href="" ng-click="MqttClient.publish(Channel.topic, Channel.payload);">Publish</a>
             </div>
         </div>
     </div>
 </form>
-
-<div class="btn-group btn-group-justified" role="group" aria-label="...">
-    <a ng-click="Subscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-primary">Subscribe</a>
-    <a ng-click="Unsubscribe()" ng-show="MqttClient.Status === 'connected'" role="button" class="btn btn-primary">Unsubscribe</a>
-</div>

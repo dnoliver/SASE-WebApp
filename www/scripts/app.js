@@ -12,8 +12,8 @@ angular
         RemoteMQTTBroker: {
             Host: 'm12.cloudmqtt.com',
             Port: 30017,
-            Username: null,
-            Password: null,
+            Username: 'cgmjjjtj',
+            Password: 'yrI01tLHePFY',
             Ssl: true
         },
         LocalMQTTBroker: {
@@ -46,12 +46,12 @@ angular
                 controllerAs: 'client'
             })
             .when('/local', {
-                templateUrl: 'views/local.html',
+                templateUrl: 'views/mqtt.html',
                 controller: 'LocalCtrl',
                 controllerAs: 'local'
             })
             .when('/remote', {
-                templateUrl: 'views/remote.html',
+                templateUrl: 'views/mqtt.html',
                 controller: 'RemoteCtrl',
                 controllerAs: 'remote'
             })

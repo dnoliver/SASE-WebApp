@@ -3,10 +3,33 @@
 angular.module('SASEWebApp')
     .controller('ClientCtrl', ['Settings', 'MqttClientFactory', 'RestClient', 'Persistance', '$scope', '$routeParams', function (Settings, MqttClientFactory, RestClient, Persistance, $scope, $routeParams) {
         $scope.RestClient = {};
-        $scope.MqttClient = null;
-        $scope.ConnectionType = 'Local';
-        $scope.MqttSubscriptions = {};
+        $scope.Settings = Settings.RemoteMQTTBroker;
+        $scope.ConnectionType = 'Remote';
         $scope.MqttInChannels = {};
+        $scope.MqttClient = MqttClientFactory.GetClient($scope.Settings);
+
+        $scope.callback = function () {
+            try {
+                $scope.$apply();
+            } catch (e) {}
+        };
+
+        $scope.MqttClient.callback = $scope.callback;
+
+        $scope.$watch('ConnectionType', function (newVal, oldVal) {
+            switch (newVal) {
+            case 'Remote':
+                $scope.Settings = Settings.RemoteMQTTBroker;
+                break;
+            case 'Local':
+                $scope.Settings = Settings.LocalMQTTBroker;
+                break;
+            }
+
+            $scope.Unsubscribe();
+            $scope.MqttClient = MqttClientFactory.GetClient($scope.Settings);
+            $scope.MqttClient.callback = $scope.callback;
+        });
 
         $scope.Update = function () {
             RestClient.get({
@@ -16,72 +39,41 @@ angular.module('SASEWebApp')
             });
         };
 
-        $scope.Connect = function () {
-            var settings = {};
-
-            if ($scope.ConnectionType === 'Local') {
-                // update LocalMQTTBroker settings
-                Settings.LocalMQTTBroker.Host = $scope.RestClient['app/host'];
-                Settings.LocalMQTTBroker.Port = $scope.RestClient['app/broker/http/port'];
-                Persistance.saveSettings();
-                // use LocalMQTTBroker settings
-                settings = Settings.LocalMQTTBroker;
-            } else {
-                // update RemoteMQTTBroker settings
-                settings = Settings.RemoteMQTTBroker;
-            }
-
-            $scope.MqttClient = MqttClientFactory.GetClient(settings, $scope);
-        };
-
         $scope.Subscribe = function () {
             var channels = $scope.RestClient['app/channels'] || [];
 
             channels.forEach(function (channel) {
-                if ($scope.ConnectionType === 'Remote') {
-                    channel.topic = $scope.RestClient['app/name'] + '/' + channel.topic;
-                }
-
                 var topic = channel.topic;
                 var qos = channel.qos;
                 var direction = channel.direction;
+                
+                if ($scope.ConnectionType === 'Remote') {
+                    var remoteTopicPrefix = $scope.RestClient['app/name'] + '/';
+                    // check if the topic is a remote topic
+                    if(topic.indexOf(remoteTopicPrefix) !== 0) {
+                        topic = remoteTopicPrefix + topic;
+                    }
+                }
 
                 if (direction === 'out') {
-                    $scope.SubscribeToTopic(topic, qos);
+                    $scope.MqttClient.subscribe(topic, qos);
                 } else if (direction === 'in') {
-                    $scope.MqttInChannels[topic] = channel;
+                    $scope.MqttInChannels[topic] = {
+                        topic: topic,
+                        qos: qos,
+                        direction: direction,
+                        payload: null
+                    };
                 }
             });
         };
 
         $scope.Unsubscribe = function () {
-            for (var topic in $scope.MqttSubscriptions) {
+            for (var topic in $scope.MqttClient.subscriptions) {
                 $scope.MqttClient.unsubscribe(topic);
             }
 
-            $scope.MqttSubscriptions = {};
             $scope.MqttInChannels = {};
-        };
-
-        $scope.SubscribeToTopic = function (topic, qos) {
-            $scope.MqttClient.subscribe(topic, qos, function (error, granted) {
-                if (error) {
-                    console.error('MqttClient', 'Error subscribing to', topic, error);
-                } else {
-                    console.info('MqttClient', 'subscribed to', topic, 'with QoS', qos);
-                    $scope.MqttSubscriptions[topic] = null;
-                    $scope.$apply();
-
-                    $scope.MqttClient.messages.on(topic, function (payload, details) {
-                        $scope.MqttSubscriptions[topic] = payload;
-                        $scope.$apply();
-                    });
-                }
-            });
-        };
-
-        $scope.PublishToChannel = function (channel) {
-            $scope.MqttClient.publish(channel.topic, channel.payload, {}, function () {});
         };
 
         // Start
