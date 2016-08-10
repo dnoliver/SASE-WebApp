@@ -24,7 +24,7 @@
 
     <!-- Add your site or application content here -->
     <div class="header">
-        <div class="navbar navbar-default" role="navigation">
+        <div class="navbar navbar-default" role="navigation" ng-controller="NavbarCtrl">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
@@ -40,7 +40,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="#/">Home</a></li>
                         <li><a href="#/clients">Clients</a></li>
-                        <li><a href="#/remote">Remote</a></li>
+                        <li ng-show="Settings.EnableRemoteConnection"><a href="#/remote">Remote</a></li>
                         <li><a href="#/local">Local</a></li>
                         <li><a href="#/settings">Settings</a></li>
                     </ul>
@@ -81,6 +81,7 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/local.js"></script>
     <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/navbar.js"></script>
     <script src="scripts/controllers/remote.js"></script>
     <script src="scripts/controllers/settings.js"></script>
     <script src="scripts/controllers/clients.js"></script>

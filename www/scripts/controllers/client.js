@@ -4,7 +4,8 @@ angular.module('SASEWebApp')
     .controller('ClientCtrl', ['Settings', 'MqttClientFactory', 'RestClient', 'Persistance', '$scope', '$routeParams', function (Settings, MqttClientFactory, RestClient, Persistance, $scope, $routeParams) {
         $scope.RestClient = {};
         $scope.Settings = Settings.RemoteMQTTBroker;
-        $scope.ConnectionType = 'Remote';
+        $scope.EnableRemoteConnection = Settings.EnableRemoteConnection;
+        $scope.ConnectionType = 'Local';
         $scope.MqttInChannels = {};
         $scope.MqttClient = MqttClientFactory.GetClient($scope.Settings);
 

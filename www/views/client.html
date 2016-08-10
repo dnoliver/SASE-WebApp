@@ -27,7 +27,7 @@
   <div class="form-group">
     <select ng-model="ConnectionType" class="form-control" placeholder="Connection Type">
       <option value="Local">Use Local Connection</option>
-      <option value="Remote">Use Remote Connection</option>
+      <option ng-if="EnableRemoteConnection" value="Remote">Use Remote Connection</option>
     </select>
   </div>
 </form>

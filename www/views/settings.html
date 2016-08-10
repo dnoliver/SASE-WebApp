@@ -19,9 +19,9 @@
     </div>
 </form>
 
-<h4>Remote Connection</h4>
+<h4 ng-show="Settings.EnableRemoteConnection">Remote Connection</h4>
 
-<form class="form-horizontal">
+<form ng-show="Settings.EnableRemoteConnection" class="form-horizontal">
     <div class="form-group">
         <label for="" class="col-sm-2 control-label">Host</label>
         <div class="col-sm-10">

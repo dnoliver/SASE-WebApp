@@ -26,7 +26,8 @@ angular
             Host: 'https://simplenoderedserver.herokuapp.com',
             Port: null,
             Api: '/api'
-        }
+        },
+        EnableRemoteConnection: false
     })
     .config(function ($routeProvider) {
         $routeProvider
